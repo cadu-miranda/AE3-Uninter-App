@@ -39,11 +39,9 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text(
+            title: Text(
               'Sobre',
-              style: TextStyle(
-                fontSize: 18,
-              ),
+              style: GoogleFonts.roboto(fontSize: 18),
             ),
             onTap: () {
               Navigator.pop(context);

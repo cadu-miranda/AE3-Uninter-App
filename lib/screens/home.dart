@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
 
     sensorData = fetchSensorData();
 
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       setState(() {
         sensorData = fetchSensorData();
       });
@@ -60,46 +60,55 @@ class _HomeState extends State<Home> {
         title: const Text('Home'),
         centerTitle: true,
       ),
-      body: Center(
-        child: FutureBuilder<SensorData>(
-          future: sensorData,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '${snapshot.data!.mcuData.temperature} °C',
-                    style: GoogleFonts.roboto(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  Text(
-                    '${snapshot.data!.mcuData.humidity} %',
-                    style: GoogleFonts.roboto(
-                        fontSize: 50,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+      body: RefreshIndicator(
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+        onRefresh: () {
           setState(() {
             sensorData = fetchSensorData();
           });
+
+          return sensorData;
         },
-        label: const Text('Atualizar'),
-        icon: const Icon(Icons.refresh),
+        backgroundColor: Colors.white,
+        color: Colors.green,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Center(
+            child: FutureBuilder<SensorData>(
+              future: sensorData,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '${snapshot.data!.mcuData.temperature} °C',
+                        style: GoogleFonts.roboto(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      Text(
+                        '${snapshot.data!.mcuData.humidity} %',
+                        style: GoogleFonts.roboto(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                return const CircularProgressIndicator(
+                  color: Colors.white,
+                  backgroundColor: Colors.white,
+                );
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
