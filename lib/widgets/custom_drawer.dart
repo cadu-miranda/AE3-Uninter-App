@@ -28,9 +28,7 @@ class CustomDrawer extends StatelessWidget {
               style: GoogleFonts.roboto(fontSize: 18),
             ),
             onTap: () {
-              Navigator.pop(context);
-
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => const Home(),
                 ),
@@ -44,9 +42,7 @@ class CustomDrawer extends StatelessWidget {
               style: GoogleFonts.roboto(fontSize: 18),
             ),
             onTap: () {
-              Navigator.pop(context);
-
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => const About(),
                 ),
@@ -74,7 +70,7 @@ Container footer(BuildContext context) {
               children: [
                 Text("Versão"),
                 Text(
-                  "1.0.0",
+                  "1.0.1",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
