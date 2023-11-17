@@ -54,15 +54,9 @@ class _HomeState extends State<Home> {
     super.initState();
 
     _loadEsp32IP();
-
-    if (_esp32Ip.isNotEmpty) {
-      _sensorData = fetchSensorData();
-
-      _loadUpdateInterval();
-    }
   }
 
-  _loadEsp32IP() async {
+  void _loadEsp32IP() async {
     String? esp32Ip = await SettingsManager.getEsp32IP();
 
     if (esp32Ip != null) {
@@ -70,11 +64,13 @@ class _HomeState extends State<Home> {
         _esp32Ip = esp32Ip;
       });
 
+      _sensorData = fetchSensorData();
+
       _loadUpdateInterval();
     }
   }
 
-  _loadUpdateInterval() async {
+  void _loadUpdateInterval() async {
     int? savedInterval = await SettingsManager.getRefreshTime();
 
     if (savedInterval != null) {
