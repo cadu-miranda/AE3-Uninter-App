@@ -71,9 +71,9 @@ class _HomeState extends State<Home> {
         },
         backgroundColor: Colors.white,
         color: Colors.green,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Center(
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             child: FutureBuilder<SensorData>(
               future: sensorData,
               builder: (context, snapshot) {
@@ -98,12 +98,19 @@ class _HomeState extends State<Home> {
                     ],
                   );
                 } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
+                  return Center(
+                    child: Text(
+                      '${snapshot.error}',
+                      style: GoogleFonts.roboto(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  );
                 }
 
                 return const CircularProgressIndicator(
-                  color: Colors.white,
-                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 );
               },
             ),
