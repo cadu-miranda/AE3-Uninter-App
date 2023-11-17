@@ -15,9 +15,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromRGBO(113, 51, 191, 1),
-        ),
       ),
     );
   }

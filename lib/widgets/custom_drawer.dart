@@ -1,4 +1,3 @@
-import '../screens/about.dart';
 import '../screens/home.dart';
 import '../screens/settings.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +9,10 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
+        padding: EdgeInsets.zero,
         children: [
           buildHeader(context),
           buildItems(context),
-          buildFooter(context)
         ],
       ),
     );
@@ -60,7 +59,7 @@ Container buildItems(BuildContext context) {
     child: Column(
       children: [
         ListTile(
-          leading: const Icon(Icons.home),
+          leading: const Icon(Icons.home_outlined),
           title: const Text("Home"),
           onTap: () {
             Navigator.pushReplacement(
@@ -70,7 +69,7 @@ Container buildItems(BuildContext context) {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.settings),
+          leading: const Icon(Icons.settings_outlined),
           title: const Text("Configurações"),
           onTap: () {
             Navigator.pushReplacement(
@@ -79,56 +78,13 @@ Container buildItems(BuildContext context) {
             );
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.info),
-          title: const Text("Sobre"),
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const About()),
-            );
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-Container buildFooter(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.all(24),
-    child: const Column(
-      children: [
-        Divider(),
-        SizedBox(height: 8),
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Versão"),
-                Text(
-                  "1.1.2",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Build"),
-                Text(
-                  "1",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        const AboutListTile(
+          icon: Icon(Icons.info_outlined),
+          applicationName: 'ESP32 Wi-Fi Monitor',
+          applicationVersion: 'v1.2.0 build 1',
+          applicationLegalese:
+              'Aplicativo desenvolvido por Carlos E. Miranda, aluno de Engenharia da Computação da Uninter',
+          child: Text("Sobre"),
         )
       ],
     ),

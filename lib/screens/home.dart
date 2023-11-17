@@ -103,6 +103,7 @@ class _HomeState extends State<Home> {
 
   AppBar buildAppBar() {
     return AppBar(
+      backgroundColor: const Color.fromRGBO(113, 51, 191, 1),
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(
@@ -164,7 +165,6 @@ class _HomeState extends State<Home> {
                   '${snapshot.error}',
                   style: GoogleFonts.roboto(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
                       color: const Color.fromRGBO(113, 51, 191, 1)),
                 );
               }

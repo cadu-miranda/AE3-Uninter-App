@@ -78,6 +78,7 @@ class _SettingsState extends State<Settings> {
 
   AppBar buildAppBar() {
     return AppBar(
+      backgroundColor: const Color.fromRGBO(113, 51, 191, 1),
       leading: Builder(
         builder: (context) => IconButton(
           icon: const Icon(
@@ -144,7 +145,7 @@ class _SettingsState extends State<Settings> {
                   int updateInterval = int.tryParse(value) ?? 0;
 
                   if (updateInterval < 10 || updateInterval > 60) {
-                    return 'O intervalo de atualização deve estar entre 10 e 60 segundos.';
+                    return 'Digite um valor entre 10 e 60.';
                   }
 
                   return null;
