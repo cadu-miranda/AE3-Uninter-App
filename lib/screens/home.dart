@@ -9,8 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 Future<SensorData> fetchSensorData() async {
-  debugPrint('fetchSensorData');
-
   String? ip = await SettingsManager.getEsp32IP();
 
   if (ip == null) {
@@ -45,7 +43,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Future<SensorData> sensorData = Future.value(SensorData.empty());
+  late Future<SensorData> _sensorData = Future.value(SensorData.empty());
 
   late String _esp32Ip = "";
 
@@ -58,7 +56,7 @@ class _HomeState extends State<Home> {
     _loadEsp32IP();
 
     if (_esp32Ip.isNotEmpty) {
-      sensorData = fetchSensorData();
+      _sensorData = fetchSensorData();
 
       _loadUpdateInterval();
     }
@@ -71,6 +69,8 @@ class _HomeState extends State<Home> {
       setState(() {
         _esp32Ip = esp32Ip;
       });
+
+      _loadUpdateInterval();
     }
   }
 
@@ -82,7 +82,7 @@ class _HomeState extends State<Home> {
 
       _timer = Timer.periodic(Duration(seconds: savedInterval), (timer) {
         setState(() {
-          sensorData = fetchSensorData();
+          _sensorData = fetchSensorData();
         });
       });
     }
@@ -129,10 +129,10 @@ class _HomeState extends State<Home> {
       triggerMode: RefreshIndicatorTriggerMode.anywhere,
       onRefresh: () {
         setState(() {
-          sensorData = fetchSensorData();
+          _sensorData = fetchSensorData();
         });
 
-        return sensorData;
+        return _sensorData;
       },
       backgroundColor: Colors.white,
       color: Colors.green,
@@ -140,7 +140,7 @@ class _HomeState extends State<Home> {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: FutureBuilder<SensorData>(
-            future: sensorData,
+            future: _sensorData,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Column(

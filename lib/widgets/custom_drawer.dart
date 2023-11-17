@@ -108,7 +108,7 @@ Container buildFooter(BuildContext context) {
               children: [
                 Text("Versão"),
                 Text(
-                  "1.1.0",
+                  "1.1.1",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
