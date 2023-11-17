@@ -1,13 +1,32 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ae3_uninter_app/classes/preferences_manager.dart';
 import 'package:ae3_uninter_app/models/sensor_data.dart';
+import 'package:ae3_uninter_app/screens/preferences.dart';
 import 'package:ae3_uninter_app/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 Future<SensorData> fetchSensorData() async {
-  final response = await http.get(Uri.parse('http://192.168.0.202:3490/data'));
+  debugPrint('fetchSensorData');
+
+  String? ip = await PreferencesManager.getEsp32IP();
+
+  if (ip == null) {
+    throw Exception('IP não configurado.');
+  }
+
+  const int port = 3490;
+
+  String url = 'http://$ip:$port';
+
+  final response = await http.get(Uri.parse("$url/data")).timeout(
+    const Duration(seconds: 10),
+    onTimeout: () {
+      throw Exception('Falha ao carregar dados do sensor.');
+    },
+  );
 
   if (response.statusCode == 200) {
     final dynamic data = jsonDecode(response.body);
@@ -26,26 +45,52 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Future<SensorData> sensorData;
+  late Future<SensorData> sensorData = Future.value(SensorData.empty());
 
-  Timer? timer;
+  String _esp32Ip = "";
+
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
 
-    sensorData = fetchSensorData();
+    _loadEsp32IP();
 
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+    if (_esp32Ip.isNotEmpty) {
+      sensorData = fetchSensorData();
+
+      _loadUpdateInterval();
+    }
+  }
+
+  _loadEsp32IP() async {
+    String? esp32Ip = await PreferencesManager.getEsp32IP();
+
+    if (esp32Ip != null) {
       setState(() {
-        sensorData = fetchSensorData();
+        _esp32Ip = esp32Ip;
       });
-    });
+    }
+  }
+
+  _loadUpdateInterval() async {
+    int? savedInterval = await PreferencesManager.getRefreshTime();
+
+    if (savedInterval != null) {
+      _timer?.cancel();
+
+      _timer = Timer.periodic(Duration(seconds: savedInterval), (timer) {
+        setState(() {
+          sensorData = fetchSensorData();
+        });
+      });
+    }
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    _timer?.cancel();
 
     super.dispose();
   }
@@ -53,69 +98,131 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(113, 51, 191, 1),
+      appBar: buildAppBar(),
       drawer: const CustomDrawer(),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width,
-      appBar: AppBar(
-        title: const Text('Home'),
-        centerTitle: true,
+      body: _esp32Ip.isNotEmpty ? buildBody() : buildEmptyBody(),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(
+            Icons.menu,
+            color: Colors.white,
+          ),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
       ),
-      body: RefreshIndicator(
-        triggerMode: RefreshIndicatorTriggerMode.anywhere,
-        onRefresh: () {
-          setState(() {
-            sensorData = fetchSensorData();
-          });
+      title: const Text(
+        'Home',
+        style: TextStyle(color: Colors.white),
+      ),
+      centerTitle: true,
+    );
+  }
 
-          return sensorData;
-        },
-        backgroundColor: Colors.white,
-        color: Colors.green,
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: FutureBuilder<SensorData>(
-              future: sensorData,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '${snapshot.data!.mcuData.temperature} °C',
-                        style: GoogleFonts.roboto(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                      Text(
-                        '${snapshot.data!.mcuData.humidity} %',
-                        style: GoogleFonts.roboto(
-                            fontSize: 50,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      '${snapshot.error}',
+  RefreshIndicator buildBody() {
+    return RefreshIndicator(
+      triggerMode: RefreshIndicatorTriggerMode.anywhere,
+      onRefresh: () {
+        setState(() {
+          sensorData = fetchSensorData();
+        });
+
+        return sensorData;
+      },
+      backgroundColor: Colors.white,
+      color: Colors.green,
+      child: Center(
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: FutureBuilder<SensorData>(
+            future: sensorData,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${snapshot.data!.mcuData.temperature} °C',
                       style: GoogleFonts.roboto(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                        fontSize: 50,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromRGBO(113, 51, 191, 1),
+                      ),
                     ),
-                  );
-                }
-
-                return const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    Text(
+                      '${snapshot.data!.mcuData.humidity} %',
+                      style: GoogleFonts.roboto(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromRGBO(113, 51, 191, 1)),
+                    ),
+                  ],
                 );
-              },
-            ),
+              } else if (snapshot.hasError) {
+                return Text(
+                  '${snapshot.error}',
+                  style: GoogleFonts.roboto(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: const Color.fromRGBO(113, 51, 191, 1)),
+                );
+              }
+
+              return const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromRGBO(113, 51, 191, 1)),
+              );
+            },
           ),
         ),
+      ),
+    );
+  }
+
+  Center buildEmptyBody() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(
+            Icons.error,
+            size: 100,
+            color: Color.fromRGBO(113, 51, 191, 1),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'IP não configurado.',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(113, 51, 191, 1),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Preferences()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 12,
+              ),
+            ),
+            child: const Text('Configurar'),
+          ),
+        ],
       ),
     );
   }

@@ -23,6 +23,10 @@ class SensorData {
 
   SensorData({required this.mcuData});
 
+  factory SensorData.empty() {
+    return SensorData(mcuData: McuData(temperature: 0, humidity: 0));
+  }
+
   SensorData.fromJson(Map<String, dynamic> json)
       : mcuData = McuData.fromJson(json['mcu_data']);
 
