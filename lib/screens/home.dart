@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:ae3_uninter_app/classes/preferences_manager.dart';
-import 'package:ae3_uninter_app/models/sensor_data.dart';
-import 'package:ae3_uninter_app/screens/preferences.dart';
-import 'package:ae3_uninter_app/widgets/custom_drawer.dart';
+import '../classes/settings_manager.dart';
+import '../models/sensor_data.dart';
+import '../screens/settings.dart';
+import '../widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +11,7 @@ import 'package:http/http.dart' as http;
 Future<SensorData> fetchSensorData() async {
   debugPrint('fetchSensorData');
 
-  String? ip = await PreferencesManager.getEsp32IP();
+  String? ip = await SettingsManager.getEsp32IP();
 
   if (ip == null) {
     throw Exception('IP não configurado.');
@@ -47,7 +47,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late Future<SensorData> sensorData = Future.value(SensorData.empty());
 
-  String _esp32Ip = "";
+  late String _esp32Ip = "";
 
   Timer? _timer;
 
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
   }
 
   _loadEsp32IP() async {
-    String? esp32Ip = await PreferencesManager.getEsp32IP();
+    String? esp32Ip = await SettingsManager.getEsp32IP();
 
     if (esp32Ip != null) {
       setState(() {
@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
   }
 
   _loadUpdateInterval() async {
-    int? savedInterval = await PreferencesManager.getRefreshTime();
+    int? savedInterval = await SettingsManager.getRefreshTime();
 
     if (savedInterval != null) {
       _timer?.cancel();
@@ -208,7 +208,7 @@ class _HomeState extends State<Home> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const Preferences()),
+                MaterialPageRoute(builder: (context) => const Settings()),
               );
             },
             style: ElevatedButton.styleFrom(

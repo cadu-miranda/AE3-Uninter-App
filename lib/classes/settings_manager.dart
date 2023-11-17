@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferencesManager {
+class SettingsManager {
   static const String esp32IP = '';
 
   static const int refreshTime = 0;

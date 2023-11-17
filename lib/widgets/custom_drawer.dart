@@ -1,6 +1,6 @@
-import 'package:ae3_uninter_app/screens/about.dart';
-import 'package:ae3_uninter_app/screens/home.dart';
-import 'package:ae3_uninter_app/screens/preferences.dart';
+import '../screens/about.dart';
+import '../screens/home.dart';
+import '../screens/settings.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -71,11 +71,11 @@ Container buildItems(BuildContext context) {
         ),
         ListTile(
           leading: const Icon(Icons.settings),
-          title: const Text("Preferências"),
+          title: const Text("Configurações"),
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const Preferences()),
+              MaterialPageRoute(builder: (context) => const Settings()),
             );
           },
         ),

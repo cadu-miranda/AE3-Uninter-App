@@ -1,4 +1,4 @@
-import 'package:ae3_uninter_app/screens/home.dart';
+import '../screens/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
