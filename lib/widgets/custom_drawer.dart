@@ -83,7 +83,7 @@ Container buildItems(BuildContext context) {
           applicationName: 'ESP32 Wi-Fi Monitor',
           applicationVersion: 'v1.2.1 build 1',
           applicationLegalese:
-              'Aplicativo desenvolvido por Carlos E. Miranda, aluno de Engenharia da Computação da Uninter',
+              'Aplicativo desenvolvido por Carlos E. Miranda, aluno de Engenharia da Computação da Uninter.',
           child: Text("Sobre"),
         )
       ],
