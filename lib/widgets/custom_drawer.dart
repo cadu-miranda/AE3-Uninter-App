@@ -42,7 +42,7 @@ Container buildHeader(BuildContext context) {
           ),
         ),
         Text(
-          "polomiranda@outlook.com",
+          "Software Developer",
           style: TextStyle(
             color: Colors.white,
             fontSize: 14,
