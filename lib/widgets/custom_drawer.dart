@@ -81,7 +81,7 @@ Container buildItems(BuildContext context) {
         const AboutListTile(
           icon: Icon(Icons.info_outlined),
           applicationName: 'ESP32 Wi-Fi Monitor',
-          applicationVersion: 'v1.2.0 build 1',
+          applicationVersion: 'v1.2.1 build 1',
           applicationLegalese:
               'Aplicativo desenvolvido por Carlos E. Miranda, aluno de Engenharia da Computação da Uninter',
           child: Text("Sobre"),
