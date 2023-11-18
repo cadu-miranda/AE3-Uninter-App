@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ae3_uninter_app",
+      "name": "esp32_wifi_monitor (debug mode)",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "ae3_uninter_app (profile mode)",
+      "name": "esp32_wifi_monitor (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "ae3_uninter_app (release mode)",
+      "name": "esp32_wifi_monitor (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

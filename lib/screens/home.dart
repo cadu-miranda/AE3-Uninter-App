@@ -192,7 +192,7 @@ class _HomeState extends State<Home> {
           ),
           const SizedBox(height: 24),
           const Text(
-            'IP não configurado.',
+            'IP não configurado',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
