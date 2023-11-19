@@ -107,7 +107,11 @@ class _SettingsState extends State<Settings> {
               child: TextFormField(
                 controller: _ipController,
                 onTapOutside: (_) {
-                  FocusScope.of(context).unfocus();
+                  final FocusScopeNode currentScope = FocusScope.of(context);
+
+                  if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+                    FocusManager.instance.primaryFocus!.unfocus();
+                  }
                 },
                 decoration: const InputDecoration(
                   labelText: 'Endereço IP',
@@ -133,7 +137,11 @@ class _SettingsState extends State<Settings> {
               child: TextFormField(
                 controller: _refreshTimeController,
                 onTapOutside: (_) {
-                  FocusScope.of(context).unfocus();
+                  final FocusScopeNode currentScope = FocusScope.of(context);
+
+                  if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+                    FocusManager.instance.primaryFocus!.unfocus();
+                  }
                 },
                 decoration: const InputDecoration(
                   labelText: 'Intervalo de atualização (segundos)',

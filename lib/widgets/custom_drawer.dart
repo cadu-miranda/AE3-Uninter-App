@@ -1,6 +1,7 @@
 import '../screens/home.dart';
 import '../screens/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -59,8 +60,11 @@ Container buildItems(BuildContext context) {
     child: Column(
       children: [
         ListTile(
-          leading: const Icon(Icons.home_outlined),
-          title: const Text("Home"),
+          leading: const Icon(Icons.home_outlined, size: 28),
+          title: Text(
+            "Home",
+            style: GoogleFonts.roboto(fontSize: 18),
+          ),
           onTap: () {
             Navigator.pushReplacement(
               context,
@@ -69,8 +73,11 @@ Container buildItems(BuildContext context) {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.settings_outlined),
-          title: const Text("Configurações"),
+          leading: const Icon(Icons.settings_outlined, size: 28),
+          title: Text(
+            "Configurações",
+            style: GoogleFonts.roboto(fontSize: 18),
+          ),
           onTap: () {
             Navigator.pushReplacement(
               context,
@@ -78,13 +85,16 @@ Container buildItems(BuildContext context) {
             );
           },
         ),
-        const AboutListTile(
-          icon: Icon(Icons.info_outlined),
+        AboutListTile(
+          icon: const Icon(Icons.info_outlined, size: 28),
           applicationName: 'ESP32 Wi-Fi Monitor',
-          applicationVersion: 'v1.2.1 build 1',
+          applicationVersion: 'v1.2.2 build 1',
           applicationLegalese:
               'Aplicativo desenvolvido por Carlos E. Miranda, aluno de Engenharia da Computação da Uninter.',
-          child: Text("Sobre"),
+          child: Text(
+            "Sobre",
+            style: GoogleFonts.roboto(fontSize: 18),
+          ),
         )
       ],
     ),
