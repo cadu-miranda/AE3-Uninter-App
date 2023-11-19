@@ -106,6 +106,9 @@ class _SettingsState extends State<Settings> {
               key: _ipFormKey,
               child: TextFormField(
                 controller: _ipController,
+                onTapOutside: (_) {
+                  FocusScope.of(context).unfocus();
+                },
                 decoration: const InputDecoration(
                   labelText: 'Endereço IP',
                   border: OutlineInputBorder(),
@@ -129,6 +132,9 @@ class _SettingsState extends State<Settings> {
               key: _refreshIntervalFormKey,
               child: TextFormField(
                 controller: _refreshTimeController,
+                onTapOutside: (_) {
+                  FocusScope.of(context).unfocus();
+                },
                 decoration: const InputDecoration(
                   labelText: 'Intervalo de atualização (segundos)',
                   border: OutlineInputBorder(),
